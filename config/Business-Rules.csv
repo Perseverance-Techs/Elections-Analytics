@@ -1,0 +1,24 @@
+RuleID,RuleName,Description,Priority,Field1,Value1,Value2,ResultField,Resultvalue,Operator,ErrorCode
+1,Clean-VoterID,Remove Special Chars from VotersID,1,id_eng,(Space),,,,RemoveRegex,ERR:SpaceVoterID
+2,Clean-FName,Remove Special Chars from F_NAME Field,2,f_name,(Space),,,,RemoveRegex,ERR:FNAMESPCHAR
+3,Replace regex,Replace Space in The ID,3,id_eng,,-,,,ReplaceRegex,
+4,Replace regex,Replace / in The ID,3,id_eng,/,-,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,3,id_eng,^.*?KL,KL,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,3,id_eng,KL,KL-,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,3,id_eng,--,-,,,ReplaceRegex,
+6,Lookup Booth Name,Lookup the Boothe Name from Booth ID,4,boothID,LookupTable,,,,LookupFiled,
+7,Validate ID,Check if the voterID starts with FD,5,Voter_ID,10,,,,ValidateLength,ERR:IDLength
+8,Convert Local Lang,Convert Form Malayalam to English,6,fname_local,name_eng,,,,convertMaltoEng,
+9,Convert Local Lang,Convert Form Malayalam to English,7,lname_local,lname_eng,,,,convertMaltoEng,	
+10,Convert Local Lang,Convert Form Malayalam to English,8,guardian_name_local,guardian_name_eng,,,,convertMaltoEng, 	
+11,Convert Local Lang,Convert Form Malayalam to English,10,house_number_local,house_number_eng,,,,convertMaltoEng,
+12,Check the Age Range,Check if the age is between 1 and 100,11,age,18,23,young_voter,TRUE,numericRange,
+13,Check the Age Range,Check if the age is between 1 and 100,8,age,18,100,,,numericRange,ERR:AGE-OOR
+14,Check the Age Range,Check if the age is between 1 and 100,8,age,2,100,,,numericRange,ERR:AGE-INV
+15,first name msiing,Check if first name is misisng,12,f_name,isNull,,,,isNull,MISS:FNAME
+16,Religious Classification,Check if a voter belongs to a given religion,13,,,,,,,
+17,Validate Length,Validate the Length of ID field,3,id_eng,15,KL,,,validateLength,ID:TOOLONG
+18,Validate Length,Validate the Length of FNAME field,3,fname_local,30,KL,,,validateLength,FNAME:TOOLONG
+19,Validate Length,Validate the Length of LNAME field,3,lname_local,40,KL,,,validateLength,LNAME:TOOLONG
+20,Validate Length,Validate the Length of Guardian Name field,3,guardian_name_local,50,KL,,,validateLength,GUARDIAN:TOOLONG
+20,Validate Length,Validate the Length of Guardian Name field,3,guardian_name_local,20,KL,,,validateLength,HNAME:TOOLONG
