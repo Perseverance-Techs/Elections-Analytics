@@ -23,3 +23,4 @@ state,String,VOTER_STATE,Varchar,30
 ROW_NUMBER,String,VOTER_SEQUENCE_NO,int,30
 ERROR_CODE,String,ERROR_CODE,Varchar,500
 young_voter,String,FIRST_TIME_VOTER,Varchar,10
+user_defined_fld1,String,FIRST_TIME_VOTER,Varchar,10

@@ -1,5 +1,6 @@
-Thread_ID,RowID_Start,RowID_end
-1,0,8000
-2,8001,16000
-3,16001,24000
-4,24001,32000
+Thread_ID,RowID_Start,RowID_end,ServiceURL
+1,0,3000,https://perselectionsapi1.pagekite.me/publishKafka
+2,3001,6000,https://perselectionsapi1.pagekite.me/publishKafka
+3,6001,9000,https://perselectionsapi1.pagekite.me/publishKafka
+4,9001,10000,https://perselectionsapi.pagekite.me/publishKafka
+
