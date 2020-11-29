@@ -1,24 +1,35 @@
 RuleID,RuleName,Description,Priority,Field1,Value1,Value2,ResultField,Resultvalue,Operator,ErrorCode
-1,Clean-VoterID,Remove Special Chars from VotersID,1,id_eng,(Space),,,,RemoveRegex,ERR:SpaceVoterID
+1,Clean-VoterID,Remove Special Chars from VotersID,2,id_eng,(Space),,,,RemoveRegex,ERR:SpaceVoterID
 2,Clean-FName,Remove Special Chars from F_NAME Field,2,f_name,(Space),,,,RemoveRegex,ERR:FNAMESPCHAR
 3,Replace regex,Replace Space in The ID,3,id_eng,,-,,,ReplaceRegex,
-4,Replace regex,Replace / in The ID,3,id_eng,/,-,,,ReplaceRegex,
-5,Replace regex,Replace / in The ID,3,id_eng,^.*?KL,KL,,,ReplaceRegex,
-5,Replace regex,Replace / in The ID,3,id_eng,KL,KL-,,,ReplaceRegex,
-5,Replace regex,Replace / in The ID,3,id_eng,--,-,,,ReplaceRegex,
-6,Lookup Booth Name,Lookup the Boothe Name from Booth ID,4,boothID,LookupTable,,,,LookupFiled,
-7,Validate ID,Check if the voterID starts with FD,5,Voter_ID,10,,,,ValidateLength,ERR:IDLength
-8,Convert Local Lang,Convert Form Malayalam to English,6,fname_local,name_eng,,,,convertMaltoEng,
-9,Convert Local Lang,Convert Form Malayalam to English,7,lname_local,lname_eng,,,,convertMaltoEng,	
-10,Convert Local Lang,Convert Form Malayalam to English,8,guardian_name_local,guardian_name_eng,,,,convertMaltoEng, 	
-11,Convert Local Lang,Convert Form Malayalam to English,10,house_number_local,house_number_eng,,,,convertMaltoEng,
+4,Replace regex,Replace / in The ID,4,id_eng,/,-,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,5,id_eng,^.*?KL,KL,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,6,id_eng,KL,KL-,,,ReplaceRegex,
+5,Replace regex,Replace / in The ID,7,id_eng,--,-,,,ReplaceRegex,
+6,Lookup Booth Name,Lookup the Boothe Name from Booth ID,8,boothID,LookupTable,,,,LookupFiled,
+7,Validate ID,Check if the voterID starts with FD,9,Voter_ID,10,,,,ValidateLength,ERR:IDLength
+8,Convert Local Lang,Convert Form Malayalam to English,20,fname_local,name_eng,,,,convertMaltoEng,
+9,Convert Local Lang,Convert Form Malayalam to English,20,lname_local,lname_eng,,,,convertMaltoEng,
+10,Convert Local Lang,Convert Form Malayalam to English,20,guardian_name_local,guardian_name_eng,,,,convertMaltoEng,
+11,Convert Local Lang,Convert Form Malayalam to English,20,house_number_local,house_number_eng,,,,convertMaltoEng,
 12,Check the Age Range,Check if the age is between 1 and 100,11,age,18,23,young_voter,TRUE,numericRange,
-13,Check the Age Range,Check if the age is between 1 and 100,8,age,18,100,,,numericRange,ERR:AGE-OOR
-14,Check the Age Range,Check if the age is between 1 and 100,8,age,2,100,,,numericRange,ERR:AGE-INV
-15,first name msiing,Check if first name is misisng,12,f_name,isNull,,,,isNull,MISS:FNAME
+13,Check the Age Range,Check if the age is between 1 and 100,11,age,18,100,,,numericRange,ERR:AGE-OOR
+14,Check the Age Range,Check if the age is between 1 and 100,11,age,2,100,,,numericRange,ERR:AGE-INV
+15,first name msiing,Check if first name is misisng,11,fname_local,isNull,,,,isNull,MISS:FNAME
 16,Religious Classification,Check if a voter belongs to a given religion,13,,,,,,,
 17,Validate Length,Validate the Length of ID field,3,id_eng,15,KL,,,validateLength,ID:TOOLONG
-18,Validate Length,Validate the Length of FNAME field,3,fname_local,30,KL,,,validateLength,FNAME:TOOLONG
-19,Validate Length,Validate the Length of LNAME field,3,lname_local,40,KL,,,validateLength,LNAME:TOOLONG
-20,Validate Length,Validate the Length of Guardian Name field,3,guardian_name_local,50,KL,,,validateLength,GUARDIAN:TOOLONG
-20,Validate Length,Validate the Length of Guardian Name field,3,guardian_name_local,20,KL,,,validateLength,HNAME:TOOLONG
+18,Validate Length,Validate the Length of ID field,3,id_local,15,KL,,,validateLength,ID:TOOLONG
+19,Validate Length,Validate the Length of FNAME field,3,fname_eng,20,KL,,,validateLength,FNAME:TOOLONG
+20,Validate Length,Validate the Length of FNAME Local field,3,fname_local,20,KL,,,validateLength,FNAME:TOOLONG
+21,Validate Length,Validate the Length of LNAME field,3,lname_local,20,KL,,,validateLength,LNAME:TOOLONG
+22,Validate Length,Validate the Length of LNAME field,3,lname_eng,20,KL,,,validateLength,LNAME:TOOLONG
+23,Validate Length,Validate the Length of Guardian Name field,3,guardian_name_local,20,KL,,,validateLength,GUARDIAN:TOOLONG
+24,Validate Length,Validate the Length of Guardian Name field,3,guardian_name,20,KL,,,validateLength,GUARDIAN:TOOLONG
+25,Validate Length,Validate the Length of Home name field,3,home_eng,20,KL,,,validateLength,FNAME:TOOLONG
+26,Validate Length,Validate the Length of Home name field,3,home_local,20,KL,,,validateLength,FNAME:TOOLONG
+27,Validate Length,Validate the Length of House Number English,3,house_number_eng,20,KL,,,validateLength,LNAME:TOOLONG
+28,Validate Length,Validate the Length of house_number_local,3,house_number_local,20,KL,,,validateLength,GUARDIAN:TOOLONG
+29,Validate Length,Validate the Length of Name field,3,name_local,20,KL,,,validateLength,NAME:TOOLONG
+29,Validate Length,Validate the Length of Name field,3,name_eng,20,KL,,,validateLength,NAME:TOOLONG
+30,Validate Length,Validate the Length of age,3,age,40,KL,,,validateLength,LNAME:TOOLONG
+31,CustomScript,CustomScript,3,id_eng,"voterDataframe.loc[((voterDataframe['id_eng'].str.contains('KL')==False) & (voterDataframe['id_eng'].str.len()> 10)),'ERROR_CODE'] = voterDataframe['ERROR_CODE']+'|'+'VOTID:INV'",KL,,,customScript,VOTID:INV

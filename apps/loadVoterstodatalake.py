@@ -19,7 +19,8 @@ if __name__ == "__main__":
         threadManagerDF= pd.read_csv("/home/ElectionProject/config/ThreadManager.csv",encoding='utf-8')        
         threadManagerDF= threadManagerDF.loc[threadManagerDF['Thread_ID'] == int(sys.argv[1])]
         processStartRow=int(threadManagerDF['RowID_Start'].values[0])
-        processEndRow=int(threadManagerDF['RowID_end'].values[0])       
+        processEndRow=int(threadManagerDF['RowID_end'].values[0])     
+        seviceURL=str(threadManagerDF['ServiceURL'].values[0])         
         print("The start row is--------------->"+str(processStartRow))
         print("The end row is--------------->"+str(processEndRow))    
         print(threadManagerDF)
@@ -61,6 +62,8 @@ if __name__ == "__main__":
         #voterDataframe = voterDataframe[int(processStartRow) : int(processEndRow), :]
 
         print(str(voterDataframe.columns.values))
+        voterDataRefined= voterDataframe[['id_eng','fname_local','age','sex','house_number_local','guardian_name_local']]
+
         
         #Start Mapping the Dataframe--Create the source dataframe
         print("#Start Mapping the Dataframe--Create the source dataframe,the source Columns are "+str(sourceCols))
@@ -91,7 +94,11 @@ if __name__ == "__main__":
 
         #Take the first 30 lines of the voter Merged Dataframe to create the JSON file. Write the same to the outbound so that 
         #these dont get published again.
-        voterMerged= voterMerged[:30]
+
+        voterMerged1= voterMerged[10:15]
+        voterMerged2= voterMerged[5:10]
+        voterMerged= voterMerged[0:5]
+
         currentDF=voterMerged['IDNumber']
         processedDF = processedDF['IDNumber']
         df_concat = processedDF.append(currentDF)
@@ -104,11 +111,45 @@ if __name__ == "__main__":
         print("The first 10 rows in the voterJSON Dataframe is"+str(voterJSON.head(10)))
         print("The columns in the voter JSON are"+str(voterJSON.columns))
         json= voterJSON.to_json(orient='records')
-
-        url = "https://perselectionsapi.pagekite.me/publishKafka"
-        requests.post(url,json,timeout=5)
-
+        jsonString=str(json)
+        PARAMS = {'jsonData':jsonString} 
+        r= requests.get(seviceURL,params = PARAMS,timeout=5)
+        print("The response is--------------------------->"+str(r))
         df_concat.to_csv (outboundPath, index = False, header=True)
+
+
+        currentDF=voterMerged1['IDNumber']
+        df_concat = processedDF.append(currentDF)
+
+        voterJSON=voterMerged1.drop(['ID_JOIN','IDNumber'],axis=1)
+        voterJSON=voterMerged1
+        voterJSON=voterJSON.drop(['ID_JOIN'],axis=1)
+        voterJSON=voterJSON.fillna("NA")
+        print("The first 10 rows in the voterJSON Dataframe is"+str(voterJSON.head(10)))
+        print("The columns in the voter JSON are"+str(voterJSON.columns))
+        json= voterJSON.to_json(orient='records')
+        jsonString=str(json)
+        PARAMS = {'jsonData':jsonString} 
+        r= requests.get(seviceURL,params = PARAMS,timeout=5)
+        print("The response is--------------------->"+str(r))
+
+        currentDF=voterMerged2['IDNumber']
+        df_concat = df_concat.append(currentDF)
+
+        voterJSON=voterMerged2.drop(['ID_JOIN','IDNumber'],axis=1)
+        voterJSON=voterMerged2
+        voterJSON=voterJSON.drop(['ID_JOIN'],axis=1)
+        voterJSON=voterJSON.fillna("NA")
+        print("The first 10 rows in the voterJSON Dataframe is"+str(voterJSON.head(10)))
+        print("The columns in the voter JSON are"+str(voterJSON.columns))
+        json= voterJSON.to_json(orient='records')
+        jsonString=str(json)
+        PARAMS = {'jsonData':jsonString} 
+        r= requests.get(seviceURL,params = PARAMS,timeout=8)
+        print("The response is---------------------------->"+str(r))
+        df_concat.to_csv (outboundPath, index = False, header=True)
+
+ 
         print(str(json))
     except Exception as e:
         print("An exception occured"+str(e))

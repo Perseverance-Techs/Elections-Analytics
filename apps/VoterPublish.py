@@ -10,17 +10,12 @@ if __name__ == "__main__":
         print("The thread number is--------------------->"+str(int(sys.argv[1])))
         voterDataframe = pd.read_csv(r"/home/ElectionProject/in-progress/CleansedVoters_"+ str(int(sys.argv[1]))+".csv",encoding='utf-8-sig')
         outboundPath= "/home/ElectionProject/outbound/processed_"+ str(int(sys.argv[1]))+".csv"
-        schemaDF= pd.read_csv("/home/ElectionProject/config/Schema-Mapping.csv",encoding='utf-8')
-        print("<--------------------------Printing the schema Manager DF------------------->"+schemaDF)    
-        print("<-------------------------The columns in Schema  DF are--------------------------->"+schemaDF.columns) 
-        
-        
         processedDF = pd.read_csv(outboundPath,encoding='utf-8')
         threadManagerDF= pd.read_csv("/home/ElectionProject/config/ThreadManager.csv",encoding='utf-8')
         
         print("The columns in thread Manager DF are "+str(threadManagerDF.columns)) 
         print("The columns in Voter Manager DF are "+str(voterDataframe.columns)) 
-        
+        voterDataframe
         threadManagerDF= threadManagerDF.loc[threadManagerDF['Thread_ID'] == int(sys.argv[1])]
         processStartRow=int(threadManagerDF['RowID_Start'].values[0])
         processEndRow=int(threadManagerDF['RowID_end'].values[0])
@@ -32,7 +27,6 @@ if __name__ == "__main__":
         #voterDataframe.to_csv (r'/home/ElectionProject/outbound/processedVoters.csv', index = False, header=True)
         voterDataframe=voterDataframe.loc[(voterDataframe['ROW_NUMBER'] >= int(processStartRow)) & (voterDataframe['ROW_NUMBER'] <= int(processEndRow))]
         #voterDataframe = voterDataframe[int(processStartRow) : int(processEndRow), :]
-
 
 
 
@@ -50,9 +44,9 @@ if __name__ == "__main__":
         voterMerged = pd.merge(voterJsonDF, processedDF, on='IDNumber', how='left')
         voterMerged = voterMerged[voterMerged['ID_JOIN'].isna()]
         print(str(voterMerged.columns.values))
-        print("The first 50 rows in the merged voter dataframe is"+str(voterMerged.head(50)))
+        print("The first 50 rows in the merged voter dataframe is"+str(voterMerged.head(10)))
 
-        voterMerged= voterMerged[:30]
+        voterMerged= voterMerged[:20]
         currentDF=voterMerged['IDNumber']
         processedDF = processedDF['IDNumber']
         df_concat = processedDF.append(currentDF)
@@ -67,10 +61,10 @@ if __name__ == "__main__":
         json= voterJSON.to_json(orient='records')
 
         url = "https://perselectionsapi.pagekite.me/publishKafka"
-        #requests.post(url,json,timeout=5)
+        requests.post(url,json,timeout=6)
 
         df_concat.to_csv (outboundPath, index = False, header=True)
-        print(str(json))
+        print('The published JSON is'+str(json))
     except:
         print("And exception occured")
 
